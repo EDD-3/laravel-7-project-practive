@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 class PostController extends Controller
 {
     //
+    public function __construct()
+    {
+        $this->middleware('web')->only(['store']);
+    }
+
     public function show(Post $post) {
         
         return view('blog-post', ['post' => $post]);
@@ -19,19 +24,26 @@ class PostController extends Controller
 
     public function store () {
         //Form validation
-        $inputs = request()->validate([
-            'title' => 'required|min:8|max:255',
-            'body' => 'required',
-            'post_image' => 'file'
+
+        $validated = request()->validate([
+            'title'=>'required|min:8|max:255',
+            'post_image'=>'required|file',
+            'body'=>'required',
         ]);
 
-        if(request ('post_image')) {
 
-            $inputs['post_image'] = request('post_image')->store('images');
+        if(request('post_image')){
+           
+            $validated['post_image'] = request('post_image')->store('images');
+            
         }
 
-        auth()->user();
-        dd(request()->all());
+
+        auth()->user()->posts()->create($validated);
+
+       
+
+        return back();
 
     }
 }
