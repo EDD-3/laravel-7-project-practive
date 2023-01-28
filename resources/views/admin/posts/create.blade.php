@@ -3,6 +3,7 @@
         <h1>Create</h1>
         <form action="{{route('post.store')}}" method="post" enctype="multipart/form-data">
             @csrf
+            {{-- Displaying validationg errors --}}
             @if ($errors->any())
             <div class="alert alert-danger">
                 <ul class="list-unstyled">
