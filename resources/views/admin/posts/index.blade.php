@@ -1,5 +1,10 @@
 <x-admin-master>
     @section('content')
+        @if(session('message'))
+          <div class="alert alert-danger">{{session('message')}}</div>
+        @elseif(session('post-created-message'))
+          <div class="alert alert-success">{{session('post-created-message')}}</div>
+        @endif
         <h1>All Posts</h1>
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -17,6 +22,7 @@
                       <th>Image</th>
                       <th>Created At</th>
                       <th>Updated At</th>
+                      <th>Delete</th>
                     </tr>
                   </thead>
                   <tfoot>
@@ -28,6 +34,7 @@
                       <th>Image</th>
                       <th>Created At</th>
                       <th>Updated At</th>
+                      <th>Delete</th>
                     </tr>
                   </tfoot>
                   <tbody>
@@ -37,9 +44,17 @@
                         <td>{{$post->user->name}}</td>
                         <td>{{$post->title}}</td>
                         <td>{{$post->body}}</td>
-                        <td><img src="{{$post->post_image}}" height="250px"></td>
+                        <td><img src="{{$post->post_image}}" height="100px"></td>
                         <td>{{$post->created_at->diffForHumans()}}</td>
                         <td>{{$post->updated_at->diffForHumans()}}</td>
+                        <td>
+                          <form action="{{route('post.destroy', $post->id)}}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            @method('DELETE')
+
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                          </form>
+                      </td>
                     </tr>
                     @endforeach
                   </tbody>

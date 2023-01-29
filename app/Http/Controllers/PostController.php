@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class PostController extends Controller
 {
@@ -50,9 +51,17 @@ class PostController extends Controller
 
         auth()->user()->posts()->create($validated);
 
-       
+        session()->flash('post-created-message','Post was created');
+
+        return redirect()->route('post.index');
+
+    }
+
+    public function destroy (Post $post, Request $request) {
+        $post->delete();
+
+        $request->session()->flash('message','Post was deleted');
 
         return back();
-
     }
 }
