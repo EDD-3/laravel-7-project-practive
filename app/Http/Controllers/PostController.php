@@ -16,52 +16,76 @@ class PostController extends Controller
         $this->middleware('web')->only(['store']);
     }
 
-    public function index() {
+    public function index()
+    {
 
         $posts = Post::all();
 
         return view('admin.posts.index', ['posts' => $posts]);
     }
 
-    public function show(Post $post) {
-        
+    public function show(Post $post)
+    {
+
         return view('blog-post', ['post' => $post]);
     }
 
-    public function create () {
+    public function create()
+    {
         return view('admin.posts.create');
     }
 
-    public function store () {
+    public function store()
+    {
         //Form validation
+        $validated = validatePostForm();
 
-        $validated = request()->validate([
-            'title'=>'required|min:8|max:255',
-            'post_image'=>'required|file',
-            'body'=>'required',
-        ]);
+        if (request('post_image')) {
 
-
-        if(request('post_image')){
-           
             $validated['post_image'] = request('post_image')->store('images');
-            
         }
-
 
         auth()->user()->posts()->create($validated);
 
-        session()->flash('post-created-message','Post was created');
+        session()->flash('post-created-message', 'Post was created');
 
         return redirect()->route('post.index');
-
     }
 
-    public function destroy (Post $post, Request $request) {
+    public function edit(Post $post)
+    {
+
+        return view('admin.posts.edit', ['post' => $post]);
+    }
+
+    public function destroy(Post $post, Request $request)
+    {
         $post->delete();
 
-        $request->session()->flash('message','Post was deleted');
+        $request->session()->flash('message', 'Post was deleted');
 
         return back();
+    }
+
+    public function update(Post $post)
+    {
+
+        $validated = validatePostForm();
+
+
+        if (request('post_image')) {
+
+            $validated['post_image'] = request('post_image')->store('images');
+            $post->post_image = $validated['post_image'];
+        }
+
+        $post->title = $validated['title'];
+        $post->body = $validated['body'];
+
+        auth()->user()->posts()->save($post);
+
+        session()->flash('post-created-message', 'Post was updated');
+
+        return redirect()->route('post.index');
     }
 }

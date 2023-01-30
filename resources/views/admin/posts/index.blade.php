@@ -42,7 +42,7 @@
                     <tr>
                         <td>{{$post->id}}</td>
                         <td>{{$post->user->name}}</td>
-                        <td>{{$post->title}}</td>
+                        <td><a href="{{route('post.edit',$post->id)}}">{{$post->title}}</a></td>
                         <td>{{$post->body}}</td>
                         <td><img src="{{$post->post_image}}" height="100px"></td>
                         <td>{{$post->created_at->diffForHumans()}}</td>
@@ -51,7 +51,6 @@
                           <form action="{{route('post.destroy', $post->id)}}" method="post" enctype="multipart/form-data">
                             @csrf
                             @method('DELETE')
-
                             <button type="submit" class="btn btn-danger">Delete</button>
                           </form>
                       </td>
@@ -62,17 +61,12 @@
               </div>
             </div>
           </div>
-
     @endsection
-
     @section('scripts')
-      <!-- Page level plugins -->
-    
+      <!-- Page level plugins -->   
     <script src="{{asset('vendor/datatables/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
-
     <!-- Page level custom scripts -->
     <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
-        
     @endsection
 </x-admin-master>
