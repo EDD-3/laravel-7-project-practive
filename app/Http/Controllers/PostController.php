@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 
 class PostController extends Controller
 {
@@ -19,7 +18,7 @@ class PostController extends Controller
     public function index()
     {
 
-        $posts = Post::all();
+        $posts = auth()->user()->posts;
 
         return view('admin.posts.index', ['posts' => $posts]);
     }
@@ -31,13 +30,18 @@ class PostController extends Controller
     }
 
     public function create()
-    {
+    {   
+        $this->authorize('create', Post::class);
+
         return view('admin.posts.create');
     }
 
     public function store()
     {
         //Form validation
+
+        $this->authorize('create', Post::class);
+
         $validated = validatePostForm();
 
         if (request('post_image')) {
@@ -57,7 +61,7 @@ class PostController extends Controller
         //Denying edit access to the post that belong
         //to the user throught the use of policy
 
-        // $this->authorize('view', $post);
+        $this->authorize('view', $post);
 
         // if (auth()->user()->can('view',$post)) {
         //     # code...
@@ -68,6 +72,8 @@ class PostController extends Controller
 
     public function destroy(Post $post, Request $request)
     {
+        $this->authorize('delete', $post);
+
         $post->delete();
 
         $request->session()->flash('message', 'Post was deleted');

@@ -43,6 +43,7 @@ class PostPolicy
     public function create(User $user)
     {
         //
+        return $user->is($user);
     }
 
     /**
@@ -69,6 +70,7 @@ class PostPolicy
     public function delete(User $user, Post $post)
     {
         //
+        return $user->id === $post->user_id;
     }
 
     /**
