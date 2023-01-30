@@ -48,11 +48,15 @@
                         <td>{{$post->created_at->diffForHumans()}}</td>
                         <td>{{$post->updated_at->diffForHumans()}}</td>
                         <td>
+
+                          {{-- //Using post policy to display delete button to avoid user deleting post that dont belong to him/her --}}
+                          @can('view', $post)
                           <form action="{{route('post.destroy', $post->id)}}" method="post" enctype="multipart/form-data">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Delete</button>
                           </form>
+                          @endcan
                       </td>
                     </tr>
                     @endforeach

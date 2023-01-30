@@ -12,7 +12,7 @@ class PostController extends Controller
     public function __construct()
     {
         // Added middleware web to store method 
-        // to be able to displa form validation errors
+        // to be able to display form validation errors
         $this->middleware('web')->only(['store']);
     }
 
@@ -54,6 +54,14 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
+        //Denying edit access to the post that belong
+        //to the user throught the use of policy
+
+        // $this->authorize('view', $post);
+
+        // if (auth()->user()->can('view',$post)) {
+        //     # code...
+        // }
 
         return view('admin.posts.edit', ['post' => $post]);
     }
@@ -82,7 +90,13 @@ class PostController extends Controller
         $post->title = $validated['title'];
         $post->body = $validated['body'];
 
-        auth()->user()->posts()->save($post);
+        // auth()->user()->posts()->save($post);
+
+        //Denying update to the posts
+        //who dont belong to the user through the use of policy
+        $this->authorize('update', $post);
+
+        $post->save();
 
         session()->flash('post-created-message', 'Post was updated');
 
