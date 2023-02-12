@@ -5,10 +5,13 @@
         @elseif(session('post-created-message'))
           <div class="alert alert-success">{{session('post-created-message')}}</div>
         @endif
+
+       @if(count($posts) >= 1)
         <h1>All Posts</h1>
+
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+              <h6 class="m-0 font-weight-bold text-primary">Posts</h6>
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -70,7 +73,11 @@
               {{$posts->links()}}
             </div>
           </div>
-          
+          @else
+
+          <h1>No Posts 👀</h1>
+
+          @endif
     @endsection
     @section('scripts')
       <!-- Page level plugins -->   
