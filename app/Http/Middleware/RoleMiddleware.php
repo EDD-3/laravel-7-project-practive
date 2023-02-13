@@ -15,6 +15,7 @@ class RoleMiddleware
      */
     public function handle($request, Closure $next, $role)
     {
+        //Adding functionality to our middleware
         if(!$request->user()->userHasRole($role)) {
             abort(403, 'You are not authorized');
         }
