@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Str;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -60,7 +60,7 @@ class User extends Authenticatable
     public function userHasRole($inquiredRole) {
         foreach($this->roles as $role) {
 
-            if($inquiredRole === $role->name) return true;
+            if(Str::lower($inquiredRole) === Str::lower($role->name)) return true;
             
             return false;
         }
