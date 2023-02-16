@@ -60,9 +60,8 @@ class User extends Authenticatable
     public function userHasRole($inquiredRole) {
         foreach($this->roles as $role) {
 
-            if(Str::lower($inquiredRole) === Str::lower($role->name)) return true;
+            return (bool)(Str::lower($inquiredRole) === Str::lower($role->name));
             
-            return false;
         }
     }
     public function getAvatarAttribute($value){
