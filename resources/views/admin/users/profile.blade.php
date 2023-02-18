@@ -124,7 +124,7 @@
 
                                                     <input type="hidden" name="role" value="{{ $role->id }}">
 
-                                                    <button type="submit" class="btn btn-danger"
+                                                    <button type="submit" class="btn btn-warning"
                                                         @if (!$user->roles->contains($role)) disabled @endif>Detach</button>
                                                 </form>
                                             </td>

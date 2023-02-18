@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Permission;
 use App\Role;
 use Illuminate\Support\Str;
 
@@ -17,7 +18,7 @@ class RoleController extends Controller
 
     public function edit(Role $role)
     {
-        return view('admin.roles.edit', ['role' => $role]);
+        return view('admin.roles.edit', ['role' => $role, 'permissions' => Permission::all()]);
     }
 
     public function store()
@@ -41,16 +42,35 @@ class RoleController extends Controller
             'name' => ['required', 'string']
         ]);
 
-        session()->flash('updated-role', 'Role ' . $role->name . ' was updated');
+        
 
         $role->name = Str::ucfirst(request('name'));
         $role->slug = Str::of(Str::lower(request('name')))->slug('-');
 
-        $role->save();
+        if($role->isDirty('name')) {
+            session()->flash('updated-role', 'Role ' . $role->name . ' was updated');
+            $role->save();
 
+        }
+
+        
 
 
         return redirect()->route('roles.index');
+    }
+
+    public function attach_permission(Role $role) {
+
+        $role->permissions()->attach(request('permission'));
+
+        return back();
+    }
+
+    public function detach_permission (Role $role) {
+        
+        $role->permissions()->detach(request('permission'));
+
+        return back();
     }
 
 
